@@ -1,0 +1,61 @@
+# code for your validity algorithm
+import pandas as pd #the code uses pandas library to create tables for truth values of our premises and conclusion
+
+# List of variable names (you can change this to include any number of variables since the code is dynamic, it allows as many premises as needed by the user)
+#variables=input() use this variable if you have less than or more than 8 premises. Remember to uncomment this variable and comment the variable after it.
+variables = ['S', 'C', 'M', 'T', 'A', 'L', 'O', 'H']
+
+# Create the data dictionary for the given variables
+data = {var: [] for var in variables}
+
+# Total combinations based on the number of variables(based on the formula to calculate no. of rows which is the premises to the power of possible truth values)
+total_rows = 2 ** len(variables)
+
+# Create a loop to populate the data dictionary with boolean values of the premises
+for i in range(total_rows):
+    for j, var in enumerate(variables):
+        # Calculate the boolean value based on the position in the binary representation
+        data[var].append((i // (2 ** (len(variables) - j - 1))) % 2 == 1)
+
+# Create a DataFrame from the results
+df = pd.DataFrame(data)
+
+# Define logical functions based on the specified premises and conclusion
+def conditional(antecedent, consequent):
+    return not antecedent or consequent
+
+#define the function for premise 1
+def premise1(S, C, T, A, O, L, H):
+    return conditional(S, (C and T and A and O and L and H))  # Premise1: S → (C & T & A & O & L & H)
+
+#define the function for premise 2
+def premise2(C, M):
+    return conditional(C, M)  # Premise2: C → M
+
+#define the function for premise 3
+def premise3(S):
+    return S  # Premise3: S
+
+#define the function for conclusion
+def conclusion(M):
+    return M  # Conclusion: M
+
+# Apply logical functions to the DataFrame
+df['premise1'] = df.apply(lambda row: premise1(row['S'], row['C'], row['T'], row['A'], row['O'], row['L'], row['H']), axis=1)
+df['premise2'] = df.apply(lambda row: premise2(row['C'], row['M']), axis=1)
+df['premise3'] = df.apply(lambda row: premise3(row['S']), axis=1)
+df['conclusion'] = df.apply(lambda row: conclusion(row['M']), axis=1)
+
+# Assign the value True to the variable validity
+validity = True  # Assume the argument is valid unless proven otherwise
+
+#create a loop to check the validity of my argument
+for _, row in df.iterrows():
+    if row['premise1'] and row['premise2'] and row['premise3'] and not row['conclusion']:
+        validity = False  # If premises are true and conclusion is false, argument is invalid
+
+if validity:
+    print("The argument is VALID.\n")#it outputs that our argument is valid. added the '\n' to make the string output separated by a line from the table
+else:
+    print("The argument is INVALID.\n")#added the '\n' to make the string output separated by a line from the table
+print(df)#it outputs the truth table
