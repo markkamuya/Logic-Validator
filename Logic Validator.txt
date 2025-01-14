@@ -4,6 +4,7 @@ import pandas as pd #the code uses pandas library to create tables for truth val
 # List of variable names (you can change this to include any number of variables since the code is dynamic, it allows as many premises as needed by the user)
 #variables=input() use this variable if you have less than or more than 8 premises. Remember to uncomment this variable and comment the variable after it.
 variables = ['S', 'C', 'M', 'T', 'A', 'L', 'O', 'H']
+
 # Create the data dictionary for the given variables
 data = {var: [] for var in variables}
 
