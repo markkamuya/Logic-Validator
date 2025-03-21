@@ -6,7 +6,6 @@ import pandas as pd #the code uses pandas library to create tables for truth val
 variables = ['S', 'C', 'M', 'T', 'A', 'L', 'O', 'H']
 # Create the data dictionary for the given variables
 data = {var: [] for var in variables}
-
 # Total combinations based on the number of variables(based on the formula to calculate no. of rows which is the premises to the power of possible truth values)
 total_rows = 2 ** len(variables)
 
